@@ -19,9 +19,9 @@ services:
       restart: always
       container_name: PostgresCont
       environment:
-        - POSTGRES_USER=ziakhan
-        - POSTGRES_PASSWORD=my_password
-        - POSTGRES_DB=mydatabase
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=cammom01
+        - POSTGRES_DB=postgres
       ports:
         - "5433:5432"
       volumes:

@@ -29,7 +29,7 @@ def test_root():
     response = client.get("/")
     assert response.status_code == 200
     assert response.json() == {"message": "Welcome to TODO app!"}
-
+    
 # Test2: post
 
 def test_create_todo(test_app):
@@ -95,14 +95,25 @@ def test_edit_todo(test_app):
     assert response.status_code == 200
     assert data["content"] == edited_todo["content"]
 
-#Test6: delete todo
-def test_delete_todo(test_app):
-    test_todo = {
-    "content": "delete todo test", "is_completed": False
-    }
-    response = test_app.post("/todos", json=test_todo)
-    todo_id = response.json()["id"]
-    response = test_app.delete(f'/todos/{todo_id}')
-    data = response.json()
+# #Test6: delete todo
+# def test_delete_todo(test_app):
+#     test_todo = {
+#     "content": "delete todo test", "is_completed": False
+#     }
+#     response = test_app.post("/todos", json=test_todo)
+#     todo_id = response.json()["id"]
+#     response = test_app.delete(f'/todos/{todo_id}')
+#     data = response.json()
+#     assert response.status_code == 200
+#     assert data["message"] == "Task successfully deleted"
+
+def test_delete_todo_item(test_app):
+    # First, create a TODO item
+    response = test_app.post("/todos", json={"content": "Delete TODO"})
     assert response.status_code == 200
-    assert data["message"] == "Task successfully deleted"
+    todo_id = response.json()["id"]
+
+    # Then, delete the TODO item
+    delete_response = test_app.delete(f"/todos/{todo_id}")
+    assert delete_response.status_code == 200
+    assert delete_response.json() == {"message": "Task successfully deleted"}

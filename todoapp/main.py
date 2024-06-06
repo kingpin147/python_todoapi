@@ -20,7 +20,7 @@ from contextlib import asynccontextmanager, contextmanager
 # Create Model / create table
 
 class TODO (SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True, nullable=False,)
     content: str = Field (index=True, min_length=5, max_length=54)
     is_completed: bool = Field(default=False)
 
@@ -54,7 +54,13 @@ async def lifespan(app: FastAPI):
     print('Tables created')
     yield
 # start app
-app: FastAPI = FastAPI(lifespan=lifespan, title="TODO APP", version="1.0.0")
+app: FastAPI = FastAPI(lifespan=lifespan, 
+    title="TODO APP", 
+    version="1.0.0",
+    servers=[{"url": "http://0.0.0.0:8000",
+    "description": "Development server"}]
+    
+    )
 
 # setting root message
 @app.get("/")
@@ -106,7 +112,7 @@ async def update_todo(todo:TODO, id:int, session:Annotated[Session,Depends(get_s
     
 #creating delete route
 @app.delete('/todos/{id}')
-async def delete_todo(todo:TODO, id:int, session:Annotated[Session,Depends(get_session)]):
+async def delete_todo(id:int, session:Annotated[Session,Depends(get_session)]):
     todo = session.exec(select(TODO).where(TODO.id == id)).first()
     if todo:
         session.delete(todo)
@@ -114,3 +120,33 @@ async def delete_todo(todo:TODO, id:int, session:Annotated[Session,Depends(get_s
         return {"message": "Task successfully deleted"}
     else:
         raise HTTPException(status_code=404, detail="TODO not found")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# async def delete_todo(todo:TODO, id:int, session:Annotated[Session,Depends(get_session)]):
+#     todo = session.exec(select(TODO).where(TODO.id == id)).first()
+#     if todo:
+#         session.delete(todo)
+#         session.commit()
+#         return {"message": "Task successfully deleted"}
+#     else:
+#         raise HTTPException(status_code=404, detail="TODO not found")
