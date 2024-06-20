@@ -120,33 +120,3 @@ async def delete_todo(id:int, session:Annotated[Session,Depends(get_session)]):
         return {"message": "Task successfully deleted"}
     else:
         raise HTTPException(status_code=404, detail="TODO not found")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# async def delete_todo(todo:TODO, id:int, session:Annotated[Session,Depends(get_session)]):
-#     todo = session.exec(select(TODO).where(TODO.id == id)).first()
-#     if todo:
-#         session.delete(todo)
-#         session.commit()
-#         return {"message": "Task successfully deleted"}
-#     else:
-#         raise HTTPException(status_code=404, detail="TODO not found")
